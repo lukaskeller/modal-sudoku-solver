@@ -1,6 +1,6 @@
 import pyomo.environ as pe
 
-from fastapi_models import Sudoku
+from .fastapi_models import Sudoku
 
 def solve_sudoku(s: Sudoku):
 

@@ -1,7 +1,7 @@
 import modal
 
 
-from fastapi_models import Sudoku
+from .fastapi_models import Sudoku
 
 #image = modal.Image.debian_slim().pip_install("fastapi[standard]")
 image = modal.Image.debian_slim().pip_install_from_pyproject("pyproject.toml")
