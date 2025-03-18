@@ -1,6 +1,6 @@
 import pyomo.environ as pe
 
-from .fastapi_models import Sudoku
+from .fastapi_models import Sudoku, SudokuSolution
 
 def solve_sudoku(s: Sudoku):
 
@@ -41,27 +41,8 @@ def solve_sudoku(s: Sudoku):
 
     model.obj = pe.Objective(expr=0, sense=pe.minimize)
 
+    pe.SolverFactory('appsi_highs').solve(model, load_solutions=False).write()
+
     return model
 
 
-
-sudoku_example = {
-    "puzzle": "1.4.28...3.815...7265.7.4.17438..15...2.4.73...97.162..3.......8.1..6....263.7.4.",
-    "solution": "174628593398154267265973481743862159612549738589731624437285916851496372926317845"
-}
-
-# convert to list-list form
-def convert(s : str) -> Sudoku:
-    s_list = list(val if val != "." else None for val in s)
-    # slice after evry 9th element
-    grid = [s_list[i:i+9] for i in range(0, len(s_list), 9)]
-    
-    return Sudoku(grid=grid, level='easy')
-
-
-
-
-m = solve_sudoku(convert(sudoku_example["solution"]))
-
-pe.SolverFactory('appsi_highs').solve(m,  load_solutions = False).write()
-#m.pprint()

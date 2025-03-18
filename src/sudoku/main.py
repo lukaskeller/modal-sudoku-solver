@@ -1,7 +1,7 @@
 import modal
 
 
-from .fastapi_models import Sudoku
+from .fastapi_models import Sudoku, SudokuSolution
 
 #image = modal.Image.debian_slim().pip_install("fastapi[standard]")
 image = modal.Image.debian_slim().pip_install_from_pyproject("pyproject.toml")
@@ -10,9 +10,9 @@ app = modal.App(image=image)
 
 @app.function()
 @modal.fastapi_endpoint(requires_proxy_auth=True, method="POST")
-def f(s: Sudoku) -> str:
-                      
-   return f"Hello, {s.level}: {s.grid}!"
+def solve(s: Sudoku) -> SudokuSolution:
+   solution = SudokuSolution(sudoku=s, solution="solution")
+   return solution
 # 
 # gen curl request for the endpoint
 # with out null
