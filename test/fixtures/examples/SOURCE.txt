@@ -1,0 +1,1 @@
+https://github.com/HiSudoku/PuzzleLibrary/tree/main/puzzles/v1/Daily
