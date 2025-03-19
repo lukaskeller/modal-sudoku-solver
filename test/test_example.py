@@ -14,8 +14,9 @@ def test_sudoku_solver(beginner_puzzle):
 def test_sudoku_solver_advanced(advanced_puzzle):
 
     for i, p in enumerate(advanced_puzzle):
+        print(i)
         if i>3:
-            break
+            continue
         p = advanced_puzzle[0]
 
         # simply call the function in local() mode to bypass modal

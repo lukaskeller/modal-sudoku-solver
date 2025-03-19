@@ -18,8 +18,8 @@ def solve_sudoku(puzzle: str):
 
     model.obj = pe.Objective(expr=0, sense=pe.minimize) # dummy obj func
 
-    sol = pe.SolverFactory('glpk').solve(model, load_solutions=True, tee=True)
-    #sol = pe.SolverFactory('appsi_highs').solve(model, load_solutions=True, tee=True)
+    #sol = pe.SolverFactory('glpk').solve(model, load_solutions=True, tee=True)
+    sol = pe.SolverFactory('appsi_highs').solve(model, load_solutions=True, tee=True)
 
     canonical_form = _extract_result(model, sol)
     return canonical_form
