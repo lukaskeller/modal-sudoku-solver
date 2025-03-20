@@ -3,26 +3,32 @@ import pyomo.environ as pe
 
 from .fastapi_models import Sudoku, SudokuSolution
 
-def solve_sudoku(puzzle: str):
+class SudokuSolver:
 
-    model = _prepare_model() # todo: can be extracted to startup for performance, independent of puzzle
+    def __init__(self):
+        # prep pyomo model only once
+        self.model = _prepare_model()
 
+    def solve_sudoku(self, puzzle: str):
+        model = self.model
 
-    # fix the known values from the grid
-    for i, (row, col) in enumerate(itertools.product(model.rows, model.cols)):
-        val = puzzle[i]
-        if val != ".":
-            # the puzzle looks like this
-            # puzzle='1.4.28...3.815...7265.7.4.17438..15...2.4.73...97.162..3.......8.1..6....263.7.4.'
-            model.has_value[row, col, int(val)].fix(1) # force to true
+        # fix the known values from the grid
+        for i, (row, col) in enumerate(itertools.product(model.rows, model.cols)):
+            val = puzzle[i]
+            if val != ".":
+                # the puzzle looks like this
+                # puzzle='1.4.28...3.815...7265.7.4.17438..15...2.4.73...97.162..3.......8.1..6....263.7.4.'
+                model.has_value[row, col, int(val)].fix(1) # force to true
 
-    model.obj = pe.Objective(expr=0, sense=pe.minimize) # dummy obj func
+        model.obj = pe.Objective(expr=0, sense=pe.minimize) # dummy obj func
 
-    #sol = pe.SolverFactory('glpk').solve(model, load_solutions=True, tee=True)
-    sol = pe.SolverFactory('appsi_highs').solve(model, load_solutions=True, tee=True)
+        #sol = pe.SolverFactory('glpk').solve(model, load_solutions=True, tee=True)
+        sol = pe.SolverFactory('appsi_highs').solve(model, load_solutions=True, tee=True)
 
-    canonical_form = _extract_result(model, sol)
-    return canonical_form
+        solution_canonical_form = _extract_result(model, sol)
+
+        model.unfix_all_vars() # reset the model for the next run
+        return solution_canonical_form
 
 
 def _extract_result(model, sol):

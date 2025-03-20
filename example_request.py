@@ -13,14 +13,11 @@ load_dotenv()
 # post request with json body: {"puzzle": "1.4.28...3.815...7265.7.4.17438..15...2.4.73...97.162..3.......8.1..6....263.7.4.", "level": "easy"}
 
 
-request_response =     {
+request_response = {
       "puzzle": ".2...6.9....2..3...5...9..1..39......9.7..4...48....3.4.....6..2..47.983.....3..7",
       "solution": "721356894984217356356849271673984125192735468548162739437598612265471983819623547"
-    }
-# make post with headers and correclty formatted json body
-# curl -H "Modal-Key: $TOKEN_ID" -H "Modal-Secret: $TOKEN_SECRET" -H "Content-Type: application/json"
-# import TOKEN_ID from .env file
-# import TOKEN_SECRET from .env file
+}
+
 
 url = 'https://lukaskeller--sudoku-solver-solve-dev.modal.run/'
 

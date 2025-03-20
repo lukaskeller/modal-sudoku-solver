@@ -18,3 +18,7 @@ dev = [
     "python-dotenv>=1.0.1",
     "requests>=2.32.3",
 ]
+[tool.pytest.ini_options]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
