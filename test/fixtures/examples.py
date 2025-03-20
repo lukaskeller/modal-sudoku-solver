@@ -7,11 +7,11 @@ from src.sudoku.fastapi_models import SudokuSolution, Sudoku
 FIXTURE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(FIXTURE_DIR, "data")
 
+
 def load_file_as_json(filename):
     """Load JSON fixture from the data directory."""
     with open(os.path.join(DATA_DIR, filename), "r") as f:
         return json.load(f)
-
 
 
 # not setting this as a fixture bcz we to use it for parametrizing the test
@@ -29,6 +29,7 @@ def beginner_puzzle():
 
     return BEGINNER_PUZZLE
 
+
 # not setting this as a fixture bcz we to use it for parametrizing the test
 def advanced_puzzle():
     """Returns the advanced puzzle fixture"""
@@ -43,4 +44,3 @@ def advanced_puzzle():
         ADVANCED_PUZZLE.append(solution)
 
     return ADVANCED_PUZZLE
-

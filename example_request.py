@@ -14,16 +14,23 @@ load_dotenv()
 
 
 request_response = {
-      "puzzle": ".2...6.9....2..3...5...9..1..39......9.7..4...48....3.4.....6..2..47.983.....3..7",
-      "solution": "721356894984217356356849271673984125192735468548162739437598612265471983819623547"
+    "puzzle": ".2...6.9....2..3...5...9..1..39......9.7..4...48....3.4.....6..2..47.983.....3..7",
+    "solution": "721356894984217356356849271673984125192735468548162739437598612265471983819623547",
 }
 
 
-url = 'https://lukaskeller--sudoku-solver-solve-dev.modal.run/'
+url = "https://lukaskeller--sudoku-solver-solve-dev.modal.run/"
 
 
-data = {'puzzle': '..2.......9857....5....6.4....2.1..5...63.....3..4...9....5...76....435...1....2.', 'level': 'easy'}
-headers = {'Content-type': 'application/json', 'Modal-Key': os.environ['TOKEN_ID'], 'Modal-Secret': os.environ['TOKEN_SECRET']}
+data = {
+    "puzzle": "..2.......9857....5....6.4....2.1..5...63.....3..4...9....5...76....435...1....2.",
+    "level": "easy",
+}
+headers = {
+    "Content-type": "application/json",
+    "Modal-Key": os.environ["TOKEN_ID"],
+    "Modal-Secret": os.environ["TOKEN_SECRET"],
+}
 
 tick = time.time()
 r = requests.post(url, data=json.dumps(data), headers=headers)
@@ -32,8 +39,8 @@ print(f"Time taken: {time.time() - tick:.2f} seconds")
 assert r.status_code == 200
 
 sudoku_solution = r.json()
-print("Puzzle:   " + request_response['puzzle'])
-print("Expected: " + request_response['solution'])
-print("Produced: " + sudoku_solution['solution'] )
+print("Puzzle:   " + request_response["puzzle"])
+print("Expected: " + request_response["solution"])
+print("Produced: " + sudoku_solution["solution"])
 
-assert sudoku_solution['solution'] == request_response['solution']
+assert sudoku_solution["solution"] == request_response["solution"]
