@@ -5,7 +5,18 @@ from .fastapi_models import Sudoku, SudokuSolution
 from .solve import SudokuSolver
 
 # image = modal.Image.debian_slim().pip_install("fastapi[standard]")
-image = modal.Image.debian_slim().pip_install_from_pyproject("pyproject.toml")
+image = (
+    modal
+    .Image.debian_slim()
+    .dockerfile_commands("COPY --from=ghcr.io/astral-sh/uv:0.6.6 /uv /uvx /bin/")
+
+    .apt_install("glpk-utils")
+    .add_local_file("pyproject.toml", "/pyproject.toml", copy=True)
+    .add_local_file("uv.lock", "/uv.lock", copy=True)
+    .run_commands("uv export --frozen -o reqs.txt && uv pip install --system -r reqs.txt")
+    #.run_commands("uv pip install --frozen --system")
+    #.pip_install_from_pyproject("pyproject.toml")
+)
 # todo add glpsol
 
 app = modal.App(name="sudoku-solver", image=image)

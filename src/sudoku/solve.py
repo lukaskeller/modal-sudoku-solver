@@ -20,10 +20,10 @@ class SudokuSolver:
 
         model.obj = pe.Objective(expr=0, sense=pe.minimize)  # dummy obj func
 
-        # sol = pe.SolverFactory('glpk').solve(model, load_solutions=True, tee=True)
-        sol = pe.SolverFactory("appsi_highs").solve(
-            model, load_solutions=True, tee=True
-        )
+        sol = pe.SolverFactory('glpk').solve(model, load_solutions=True, tee=True)
+        #sol = pe.SolverFactory("appsi_highs").solve(
+        #    model, load_solutions=True, tee=True
+        #)
 
         solution_canonical_form = _extract_result(model, sol)
 

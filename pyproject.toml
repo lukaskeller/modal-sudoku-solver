@@ -1,7 +1,7 @@
 [project]
 name = "sudoku"
 version = "0.1.0"
-description = "Add your description here"
+description = "Solves Sudoku puzzles on Modal"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
