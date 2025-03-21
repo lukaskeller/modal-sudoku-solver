@@ -5,12 +5,7 @@ import time
 
 from dotenv import load_dotenv
 
-load_dotenv()
-
-# TOKEN_SECRET
-# TOKEN_ID
-# https://lukaskeller--sudoku-solver-solve-dev.modal.run/
-# post request with json body: {"puzzle": "1.4.28...3.815...7265.7.4.17438..15...2.4.73...97.162..3.......8.1..6....263.7.4.", "level": "easy"}
+load_dotenv() # load modal secrets from .env to env
 
 
 request_response = {
@@ -18,12 +13,10 @@ request_response = {
     "solution": "721356894984217356356849271673984125192735468548162739437598612265471983819623547",
 }
 
-
 url = "https://lukaskeller--sudoku-solver-solve-dev.modal.run/"
 
-
-data = {
-    "puzzle": "..2.......9857....5....6.4....2.1..5...63.....3..4...9....5...76....435...1....2.",
+payload = {
+    "puzzle": request_response["puzzle"],
     "level": "easy",
 }
 headers = {
@@ -32,15 +25,15 @@ headers = {
     "Modal-Secret": os.environ["TOKEN_SECRET"],
 }
 
+# timed submit
 tick = time.time()
-r = requests.post(url, data=json.dumps(data), headers=headers)
+r = requests.post(url, data=json.dumps(payload), headers=headers)
 print(f"Time taken: {time.time() - tick:.2f} seconds")
 
+# check solution
 assert r.status_code == 200
-
 sudoku_solution = r.json()
-print("Puzzle:   " + request_response["puzzle"])
-print("Expected: " + request_response["solution"])
-print("Produced: " + sudoku_solution["solution"])
-
 assert sudoku_solution["solution"] == request_response["solution"]
+print("Submitted Puzzle:" + request_response["puzzle"])
+print("Expected Result: " + request_response["solution"])
+print("Returned Result: " + sudoku_solution["solution"])
