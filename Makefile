@@ -16,10 +16,7 @@ deploy:
 	modal deploy -m src.sudoku
 
 lint:
-	uvx ruff check .
-
-format:
-	uvx ruff format .
+	uvx ruff check . --fix && uvx ruff format .
 
 clean:
 	find . -name "__pycache__" -exec rm -rf {} +

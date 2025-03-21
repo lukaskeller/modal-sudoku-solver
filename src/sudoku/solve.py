@@ -2,7 +2,6 @@ import itertools
 import pyomo.environ as pe
 
 
-
 class SudokuSolver:
     def __init__(self):
         # prep pyomo model only once
