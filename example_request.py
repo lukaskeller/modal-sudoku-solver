@@ -28,7 +28,7 @@ headers = {
 # timed submit
 tick = time.time()
 r = requests.post(url, data=json.dumps(payload), headers=headers)
-print(f"Time taken: {time.time() - tick:.2f} seconds")
+print(f"Time taken: {time.time() - tick:.2f} seconds") # around 1s
 
 # check solution
 assert r.status_code == 200
