@@ -6,6 +6,7 @@ from .solve import SudokuSolver
 
 # image = modal.Image.debian_slim().pip_install("fastapi[standard]")
 image = modal.Image.debian_slim().pip_install_from_pyproject("pyproject.toml")
+# todo add glpsol
 
 app = modal.App(name="sudoku-solver", image=image)
 

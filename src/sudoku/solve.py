@@ -1,7 +1,6 @@
 import itertools
 import pyomo.environ as pe
 
-from .fastapi_models import Sudoku, SudokuSolution
 
 
 class SudokuSolver:
