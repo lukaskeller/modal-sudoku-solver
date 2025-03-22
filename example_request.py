@@ -31,7 +31,7 @@ r = requests.post(url, data=json.dumps(payload), headers=headers)
 print(f"Time taken: {time.time() - tick:.2f} seconds") # around 1s
 
 # check solution
-assert r.status_code == 200
+assert r.status_code == 200, f"Failed to submit puzzle: {r.status_code, r.text}"
 sudoku_solution = r.json()
 assert sudoku_solution["solution"] == request_response["solution"]
 print("Submitted Puzzle:" + request_response["puzzle"])
