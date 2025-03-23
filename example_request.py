@@ -5,7 +5,7 @@ import time
 
 from dotenv import load_dotenv
 
-load_dotenv() # load modal secrets from .env to env
+load_dotenv()  # load modal secrets from .env to env
 
 
 request_response = {
@@ -28,7 +28,7 @@ headers = {
 # timed submit
 tick = time.time()
 r = requests.post(url, data=json.dumps(payload), headers=headers)
-print(f"Time taken: {time.time() - tick:.2f} seconds") # around 1s
+print(f"Time taken: {time.time() - tick:.2f} seconds")  # around 1s
 
 # check solution
 assert r.status_code == 200, f"Failed to submit puzzle: {r.status_code, r.text}"

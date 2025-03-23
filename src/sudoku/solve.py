@@ -1,40 +1,52 @@
 import itertools
 import pyomo.environ as pe
-import pyomo.opt
 
 
 class SudokuSolver:
     def __init__(self):
         # prep pyomo model only once
         self.model = self._prepare_model()
+        self.solver = pe.SolverFactory("glpk")
+        # self.solver = pe.SolverFactory("appsi_highs") # slower, although easier to install coz pypi package
 
     def solve_sudoku(self, puzzle: str):
-        model = self.model
+        self.set_known_cell_values(puzzle)
 
-        # fix the known values from the grid
-        for i, (row, col) in enumerate(itertools.product(model.rows, model.cols)):
-            val = puzzle[i]
-            if val != ".":
-                # the puzzle looks like this
-                # puzzle='1.4.28...3.815...7265.7.4.17438..15...2.4.73...97.162..3.......8.1..6....263.7.4.'
-                model.has_value[row, col, int(val)].fix(1)  # force to true
+        result = self.solver.solve(self.model, load_solutions=False, tee=True)
 
-        model.obj = pe.Objective(expr=0, sense=pe.minimize)  # dummy obj func
+        if (result.solver.status == pe.SolverStatus.ok) and (
+            result.solver.termination_condition == pe.TerminationCondition.optimal
+        ):
+            # Manually load the solution into the model
+            self.model.solutions.load_from(result)
+        else:
+            raise ValueError(
+                f"Model not solved to optimality: {result.solver.termination_condition}"
+            )
 
-        solver = pe.SolverFactory("glpk")
-        #solver = pe.SolverFactory("appsi_highs")
-        sol = solver.solve(model, load_solutions=True, tee=True)
+        solution_canonical_form = self._extract_result()
 
-        solution_canonical_form = self._extract_result(sol)
-
-        model.unfix_all_vars()  # reset the model for the next run
         return solution_canonical_form
 
+    def set_known_cell_values(self, puzzle: str):
+        # we use variable fixing in pyomo to enforce starting values in the grid
 
-    def _extract_result(self, sol: pyomo.opt.SolverResults) -> str:
-        sol_json = sol.json_repn()
-        solver_info = sol_json["Solver"][0]
-        print(solver_info)
+        ## the model could have run before. reset all fixed vars. idempotent operation
+        self.model.unfix_all_vars()
+
+        # fix the known values from the grid
+        all_rows_and_columns = itertools.product(
+            self.model.rows, self.model.cols
+        )  # (row, col) tuples
+        for i, (row, col) in enumerate(all_rows_and_columns):
+            # going through all columns and rows, if the puzzle has a value at this position, fix the corresponding variable
+            # Note: the puzzle is a string with this structure:
+            # puzzle='1.4.28...3.815...7265.7.4.17438..15...2.4.73...97.162..3.......8.1..6....263.7.4.'
+            val = puzzle[i]
+            if val != ".":
+                self.model.has_value[row, col, int(val)].fix(1)  # force to true
+
+    def _extract_result(self) -> str:
         correct_cell_values = sorted(
             [v.index() for v in self.model.has_value.values() if v.value > 0.5]
         )
@@ -45,7 +57,6 @@ class SudokuSolver:
         canonical_form = "".join(str(val) for val in only_correct_values)
         # '17462859...
         return canonical_form
-
 
     @staticmethod
     def _prepare_model() -> pe.ConcreteModel:
@@ -92,5 +103,10 @@ class SudokuSolver:
                 == 1
             )
 
-        model.box_rule = pe.Constraint(model.box * model.box * model.vals, rule=_box_rule)
+        model.box_rule = pe.Constraint(
+            model.box * model.box * model.vals, rule=_box_rule
+        )
+
+        model.obj = pe.Objective(expr=0, sense=pe.minimize)  # dummy obj func
+
         return model
