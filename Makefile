@@ -1,4 +1,4 @@
-.PHONY: init test test-all lint format typecheck clean check
+.PHONY: init test test-all lint clean check
 
 test:
 	uv run python -m pytest -m "not slow" -vvv
