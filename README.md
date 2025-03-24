@@ -1,6 +1,5 @@
 # Sudoku Solver
-Simple Sudoku solver on Modal, using a MILP solver. 
-The service accepts a Sudoku puzzle and returns the solved puzzle.
+Simple Sudoku solver on Modal, using mixed-integer programming, exposed as a RESTful service. Accepts a Sudoku puzzle and returns the solved puzzle.
 
 Solves sudoku puzzles in this format (rows first, empty cells as `.`):
 ```
