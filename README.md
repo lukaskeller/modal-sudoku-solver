@@ -17,6 +17,7 @@ You need the `glpk` MILP solver and `uv` for all python requirements
 # sudo apt-get install glpk-utils
 # mac:
 brew install glpk
+# common:
 curl -LsSf https://astral.sh/uv/install.sh | sh
 git clone git@github.com:lukaskeller/modal-sudoku-solver.git
 cd modal-sudoku-solver && uv sync
